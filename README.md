@@ -14,11 +14,13 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
     * ftype - Filter type, one of 'hilbert' (default), 'lpf'
     * stopband_atten_db
     * transition_bandwidth_hz
-    * fpass_hz - Passband edge frequency ofhalfband prototype filter
+    * fpass_hz - Passband edge frequency of halfband prototype filter
     * filter_order
     * filter_coefs - Array of magnitude-squared pole values
     * sos0,sos1 - Second order section (SOS) description for upper,lower allpass branches
       * Each row describes one SOS stage using MATLAB / GNU Octave SOS format
+      * sos0 describes the upper branch, the real path of the hilbert filter
+      * sos1 describes the lower branch, the imaginary path of the hilbert filter
     * F - Frequency array used to evaluate filter responses (Hz)
     * H - Frequency response array (linear scale)
     * H0,H1 - Frequency response array for upper,lower allpass branches (linear scale)
@@ -27,10 +29,11 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
     * Gd - Group delay response array (samples)
     * diff_phase_rad - Branch differential phase (radians)
 
-* halfband_poles.m - Calculates IIR filter coefficients using the method described in [1]
+* halfband_poles.m - Calculate IIR filter coefficients using the method described in [1]
   * halfband_poles takes the following inputs
     * wp - passband edge frequency of halfband prototype filter (radians)
       * $wp = \pi(f_{nyq} - TBW)/f_s$
+    * As - stopband attenuation (dB)
 * sosfilter.m - Filter signal through cascade of second order sections (SOS)
   * See help in m-file for usage
 * sosfreqz.m - Calculate frequency response of cascaded second order sections (SOS)
@@ -59,7 +62,7 @@ Stopband (SB) attenuation (dB): 67
      Transition bandwidth (Hz): 0.1000
  Lower passband (PB) edge (Hz): 0.0500
             Upper PB edge (Hz): 0.9500
-                PB ripple (dB): +/-4.487e-07
+                     PB ripple: less than +/-0.001 dB
       PB group delay (samples): Peak 10.9, Mean 3.9
        PB diff phase (degrees): Mean 90.000
  PB diff phase error (degrees): +/-5.209e-02
@@ -84,7 +87,7 @@ Stopband (SB) attenuation (dB): 82
      Transition bandwidth (Hz): 360
  Lower passband (PB) edge (Hz): 180
             Upper PB edge (Hz): 23820
-                PB ripple (dB): +/-1.490e-08
+                     PB ripple: less than +/-0.001 dB
       PB group delay (samples): Peak 87.8, Mean 8.3
        PB diff phase (degrees): Mean 90.000
  PB diff phase error (degrees): +/-9.492e-03
@@ -109,7 +112,7 @@ Stopband (SB) attenuation (dB): 54
      Transition bandwidth (Hz): 1103
  Lower passband (PB) edge (Hz): -10474
             Upper PB edge (Hz): 10474
-                PB ripple (dB): +/-8.710e-06
+                     PB ripple: less than +/-0.001 dB
       PB group delay (samples): Peak 18.0, Mean 4.1
        PB diff phase (degrees): Mean -0.000
  PB diff phase error (degrees): +/-2.295e-01

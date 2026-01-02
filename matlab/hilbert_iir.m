@@ -332,7 +332,11 @@ function report_measurements(info)
         fprintf(1,' Lower passband (PB) edge (Hz): %.4f\n', fc - fpass);
         fprintf(1,'            Upper PB edge (Hz): %.4f\n', fc + fpass);
     end
-    fprintf(1,'                PB ripple (dB): +/-%.3e\n', gn_pk2pk/2);
+    if gn_pk2pk/2 < 1e-3
+        fprintf(1,'                     PB ripple: less than +/-0.001 dB\n');
+    else
+        fprintf(1,'                PB ripple (dB): +/-%.3e\n', gn_pk2pk/2);
+    end
     fprintf(1,'      PB group delay (samples): Peak %.1f, Mean %.1f\n', ...
               gd_pk, gd_mu);
     fprintf(1,'       PB diff phase (degrees): Mean %.3f\n', dph_mu);
