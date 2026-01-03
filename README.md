@@ -9,6 +9,13 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
     * 'Fs', fs - Sampling frequency in Hz  (default 2)
     * 'Ftype', ftype - Filter type, one of 'hilbert' (default), 'lpf'
     * 'TBWN', tbwn - Normalized transistion bandwidth, 0<tbwn<1 (default 0.1)
+      * $tbw = (f_{stop} - f_{pass})$
+      * $tbwn = tbw/f_{nyquist}$
+      * $f_{nyquist} = f_s/2$
+      * $f_{pass}$ is the passband edge frequency of the halfband prototype filter
+      * $f_{stop}$ is the stopband edge frequency of the halfband prototype filter
+      * Passband edge is the frequency at which the linear gain reaches $1 - 10^{-As/20}$
+      * Stopband edge is the frequency at which the linear gain reaches $10^{-As/20}$
     * 'VERBOSE', verbose - set to 0 to run quietly, set to 1 for plots and info
   * hilbert_iir returns struct _info_ containing the following members
     * ftype - Filter type, one of 'hilbert' (default), 'lpf'
@@ -31,8 +38,9 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
 
 * halfband_poles.m - Calculate IIR filter coefficients using the method described in [1]
   * halfband_poles takes the following inputs
-    * wp - passband edge frequency of halfband prototype filter (radians)
-      * $wp = \pi(f_{nyq} - TBW)/f_s$
+    * wp - normalized passband edge frequency of halfband prototype filter (radians)
+      * $wp = \pi(f_{nyquist} - TBW)/f_s$
+      * $0 < wp < 2\pi$, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$f_{nyquist} > TBW > 0$
     * As - stopband attenuation (dB)
 * sosfilter.m - Filter signal through cascade of second order sections (SOS)
   * See help in m-file for usage
@@ -45,6 +53,7 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
 
 # Examples
 ### 1. Run the main program in demo mode
+A demonstration of the program is obtained by running ```hilbert_iir``` with no input arguments, thereby setting all parameters to their default.
 
 ~~~~
 >> hilbert_iir;
@@ -120,6 +129,7 @@ Stopband (SB) attenuation (dB): 54
 ![Example 3](./images/ex_3.png "Halfband As=50dB,Fs=44.1e3,TBW=0.05")
 
 ### 4. Run the IIR filter designer standalone
+This example sets normalized transition bandwidth 0.05 and stopband attenuation 60 dB.
 
 ~~~~
 >> wp = pi*0.45; As = 60;
