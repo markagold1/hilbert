@@ -40,7 +40,8 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
   * halfband_poles takes the following inputs
     * wp - normalized passband edge frequency of halfband prototype filter (radians)
       * $wp = \pi(f_{nyquist} - TBW)/f_s$
-      * $0 < wp < 2\pi$, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$f_{nyquist} > TBW > 0$
+      * $0 < wp < 2\pi$
+      * $f_{nyquist} > TBW > 0$
     * As - stopband attenuation (dB)
 * sosfilter.m - Filter signal through cascade of second order sections (SOS)
   * See help in m-file for usage
