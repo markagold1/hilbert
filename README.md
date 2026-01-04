@@ -26,14 +26,12 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
     * ```filter_coefs``` - Array of magnitude-squared pole values
     * ```sos0,sos1``` - Second order section (SOS) description for upper,lower allpass branches
       * SOS uses MATLAB / GNU Octave SOS format to describe each second order stage
-         ```math
-         $SOS = \begin{bmatrix}
+         $$SOS = \begin{bmatrix}
           b_{01} & b_{11} & 1 & a_{11} & a_{21}\\
           b_{02} & b_{12} & 1 & a_{12} & a_{22}\\
           \vdots & \vdots & \vdots & \vdots & \vdots\\
           b_{0N} & b_{1N} & 1 & a_{1N} & a_{2N}
-          \end{bmatrix}$
-         ```
+          \end{bmatrix}$$
       * The $k^{th}$ row describes the transfer function of one SOS stage  
          $H(z) = \prod\limits_{k=1}^{N} \frac{b_{0k} + b_{1k}z^{-1} + b_{2k}z^{-2}}{1 + a_{1k}z^{-1} + a_{2k}z^{-2}}$
       * sos0 describes the upper branch, the real path of the hilbert filter
