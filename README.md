@@ -5,10 +5,10 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
 # Files
 * hilbert_iir.m - The main design and analysis program
   * ```hilbert_iir``` takes zero or more of the following _Name,Value_ pairs in any order
-    * 'As', As - Stopband attenuation in dB (default 60)
-    * 'Fs', fs - Sampling frequency in Hz  (default 2)
-    * 'Ftype', ftype - Filter type, one of 'hilbert' (default), 'lpf'
-    * 'TBWN', tbwn - Normalized transistion bandwidth, 0<tbwn<1 (default 0.1)
+    * ```'As', As``` - Stopband attenuation in dB (default 60)
+    * ```'Fs', fs``` - Sampling frequency in Hz  (default 2)
+    * ```'Ftype', ftype``` - Filter type, one of 'hilbert' (default), 'lpf'
+    * ```'TBWN'```, tbwn - Normalized transition bandwidth, 0<tbwn<1 (default 0.1)
       * $tbw = (f_{stop} - f_{pass})$
       * $tbwn = tbw/f_{nyquist}$
       * $f_{nyquist} = f_s/2$
@@ -17,40 +17,74 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
       * Passband edge is the frequency at which the linear gain reaches $1 - 10^{-As/20}$
       * Stopband edge is the frequency at which the linear gain reaches $10^{-As/20}$
     * 'VERBOSE', verbose - set to 0 to run quietly, set to 1 for plots and info
-  * hilbert_iir returns struct _info_ containing the following members
-    * ftype - Filter type, one of 'hilbert' (default), 'lpf'
-    * stopband_atten_db
-    * transition_bandwidth_hz
-    * fpass_hz - Passband edge frequency of halfband prototype filter
-    * filter_order
-    * filter_coefs - Array of magnitude-squared pole values
-    * sos0,sos1 - Second order section (SOS) description for upper,lower allpass branches
-      * Each row describes one SOS stage using MATLAB / GNU Octave SOS format
+  * ```hilbert_iir``` returns struct _info_ containing the following members
+    * ```ftype``` - Filter type, one of 'hilbert' (default), 'lpf'
+    * ```stopband_atten_db```
+    * ```transition_bandwidth_hz```
+    * ```fpass_hz``` - Passband edge frequency of halfband prototype filter
+    * ```filter_order```
+    * ```filter_coefs``` - Array of magnitude-squared pole values
+    * ```sos0,sos1``` - Second order section (SOS) description for upper,lower allpass branches
+      * SOS uses MATLAB / GNU Octave SOS format to describe each second order stage
+         $SOS = \begin{bmatrix}
+          b_{01} & b_{11} & 1 & a_{11} & a_{21}\\
+          b_{02} & b_{12} & 1 & a_{12} & a_{22}\\
+          \vdots & \vdots & \vdots & \vdots & \vdots\\
+          b_{0N} & b_{1N} & 1 & a_{1N} & a_{2N}
+          \end{bmatrix}$
+      * The $k^{th}$ row describes the transfer function of one SOS stage  
+         $H(z) = \prod\limits_{k=1}^{N} \frac{b_{0k} + b_{1k}z^{-1} + b_{2k}z^{-2}}{1 + a_{1k}z^{-1} + a_{2k}z^{-2}}$
       * sos0 describes the upper branch, the real path of the hilbert filter
       * sos1 describes the lower branch, the imaginary path of the hilbert filter
-    * F - Frequency array used to evaluate filter responses (Hz)
-    * H - Frequency response array (linear scale)
-    * H0,H1 - Frequency response array for upper,lower allpass branches (linear scale)
-    * gain - Magnitue response array (dB)
-    * phase - Phase response array (radians)
-    * Gd - Group delay response array (samples)
-    * diff_phase_rad - Branch differential phase (radians)
+    * ```F``` - Frequency array used to evaluate filter responses (Hz)
+    * ```H``` - Frequency response array (linear scale)
+    * ```H0,H1``` - Frequency response array for upper,lower allpass branches (linear scale)
+    * ```gain``` - Magnitue response array (dB)
+    * ```phase``` - Phase response array (radians)
+    * ```Gd``` - Group delay response array (samples)
+    * ```diff_phase_rad``` - Branch differential phase (radians)
 
 * halfband_poles.m - Calculate IIR filter coefficients using the method described in [1]
-  * halfband_poles takes the following inputs
-    * wp - normalized passband edge frequency of halfband prototype filter (radians)
+  * ```[P,P0,P1] = halfband_poles(wp,As)``` inputs
+    * ```wp``` - normalized passband edge frequency of halfband prototype filter (radians)
       * $wp = \pi(f_{nyquist} - TBW)/f_s$
       * $0 < wp < 2\pi$
       * $f_{nyquist} > TBW > 0$
-    * As - stopband attenuation (dB)
+    * ```As``` - stopband attenuation (dB)
+  * ```[P,P0,P1] = halfband_poles(wp,As)``` returns
+    * ```P``` - 1-d array of IIR coefficients (magnitude-squared poles)
+    * ```P0``` - 1-d array, partition of P corresponding to the upper allpass branch (real path of Hilbert filter)
+    * ```P1``` - 1-d array, partition of P corresponding to the lower allpass branch (imaginary path of Hilbert filter)
+
 * sosfilter.m - Filter signal through cascade of second order sections (SOS)
-  * See help in m-file for usage
+  * ```y = sosfilter(sos,x)``` inputs
+    * ```sos``` - N-by-6 array of second order sections, 1 row per stage
+    * ```x``` - 1-d array containing input to filter
+  * ```y = sosfilter(sos,x)``` returns
+    * ```y``` - 1-d array containing filtered output
+
 * sosfreqz.m - Calculate frequency response of cascaded second order sections (SOS)
-  * See help in m-file for usage
+  * ```H = sosfreqz(sos,f,fs)``` inputs
+    * ```sos``` - N-by-6 array of second order sections, 1 row per stage
+    * ```f``` - 1-d array of frequencies to evaluate response (Hz)
+    * ```fs``` - scalar sampling frequency (Hz)
+  * ```H = sosfreqz(sos,f,fs)``` returns
+    * ```H``` - 1-d array of complex frequency response (linear scale)
+
 * pm_unwrap.m - Phase unwrapper
-  * See help in m-file for usage
+  * ```uw = pm_unwrap(w)``` inputs
+    * ```w``` - 1-d array of phase values to unwrap (radians)
+  * ```uw = pm_unwrap(w)``` returns
+    * ```uw``` - 1-d array of unwrapped phase (radians)
+
 * pm_freqz.m - Discrete-time frequency response
-  * See help in m-file for usage
+  * ```H = pm_freqz(b,a,f,fs)``` inputs
+    * ```b``` - 1-d array of numerator transfer function coefficients
+    * ```a``` - 1-d array of denominator transfer function coefficients
+    * ```f``` - 1-d array of frequencies to evaluate response (Hz)
+    * ```fs``` - scalar sampling frequency (Hz)
+  * ```H = pm_freqz(b,a,f,fs)``` returns
+    * ```H``` - 1-d array of complex frequency response (linear scale)
 
 # Examples
 ### 1. Run the main program in demo mode
@@ -130,7 +164,7 @@ Stopband (SB) attenuation (dB): 54
 ![Example 3](./images/ex_3.png "Halfband As=50dB,Fs=44.1e3,TBW=0.05")
 
 ### 4. Run the IIR filter designer standalone
-This example sets normalized transition bandwidth 0.05 and stopband attenuation 60 dB.
+This example sets normalized transition bandwidth 0.1 and stopband attenuation 60 dB.
 
 ~~~~
 >> wp = pi*0.45; As = 60;

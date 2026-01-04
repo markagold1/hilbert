@@ -1,5 +1,13 @@
 function H = sosfreqz(sos,f,fs)
 % Usage: H = sosfreqz(sos,f,fs)
+%
+% Frequency response of cascaded second order sections (SOS)
+%
+%  sos.............N-by-6 array, 1 row per SOS stage
+%  f...............1d array of frequencies to evaluate response (Hz)
+%  fs..............Scalar sampling frequency (Hz)
+%  H...............1d array of frequency response (linear scale)
+%
 
     if exist('freqz') == 2
         rspz = @(b,a,f,fs) freqz(b,a,f,fs);

@@ -1,5 +1,11 @@
 function uw = pm_unwrap(w)
-
+% Usage: uw = pm_unwrap(w)
+%
+% Phase unwrapper.
+%
+%  w.........1d array of phase values to unwrap (radians)
+%  uw........1d array of unwrapped phase values (radians)
+%
     if numel(w) == 1
         uw = w;
         return
