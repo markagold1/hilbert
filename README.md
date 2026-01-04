@@ -27,9 +27,9 @@ This repo contains tools to design and analyze IIR Hilbert transformer filters. 
     * ```sos0,sos1``` - Second order section (SOS) description for upper,lower allpass branches
       * SOS uses MATLAB / GNU Octave SOS format to describe each second order stage
          $SOS = \begin{bmatrix}
-          b_{01} & b_{11} & 1 & a_{11} & a_{21}\\
-          b_{02} & b_{12} & 1 & a_{12} & a_{22}\\
-          \vdots & \vdots & \vdots & \vdots & \vdots\\
+          b_{01} & b_{11} & 1 & a_{11} & a_{21}\\\
+          b_{02} & b_{12} & 1 & a_{12} & a_{22}\\\
+          \vdots & \vdots & \vdots & \vdots & \vdots\\\
           b_{0N} & b_{1N} & 1 & a_{1N} & a_{2N}
           \end{bmatrix}$
       * The $k^{th}$ row describes the transfer function of one SOS stage  
